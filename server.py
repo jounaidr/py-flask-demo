@@ -5,7 +5,7 @@ from marshmallow.validate import Range
 app = Flask(__name__)
 
 port = 8000
-# Dict is best data structure for this use case, O(n log n) sort,
+# Dict is best data structure for this use case, O(n log n) sorted, lookup O(1) as hashmap...
 scores = {"pete": 4, "john": 1, "timmy": 3}
 
 
