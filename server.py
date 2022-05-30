@@ -5,9 +5,9 @@ from marshmallow.validate import Range
 app = Flask(__name__)
 
 port = 8000
-# Dict is best data structure for this use case, O(n log n) sorted, lookup O(1) as hashmap...
-scores = {"pete": 4, "john": 1, "timmy": 3}
-
+# scores = {"pete": 4, "john": 1, "timmy": 3} Some initial data for testing
+scores = {}  # Dict is best data structure for this use case, O(n log n) sorted,
+# lookup O(1) as hashmap...
 
 # Schema used to validate scores POST payload so only specified fields are accepted
 class ScoreSchema(Schema):
