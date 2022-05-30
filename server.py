@@ -5,7 +5,8 @@ from marshmallow.validate import Range
 app = Flask(__name__)
 
 port = 8000
-scores = {"pete": 4, "john": 1, "timmy": 3, "man": 30, "boy": 12}
+# Dict is best data structure for this use case, O(n log n) sort,
+scores = {"pete": 4, "john": 1, "timmy": 3}
 
 
 # Schema used to validate scores POST payload so only specified fields are accepted
@@ -18,20 +19,21 @@ class ScoreSchema(Schema):
 @app.route('/scores/', methods=['POST'])
 def post_scores():
     schema = ScoreSchema()
+
     try:
         # Validate request body against score schema data types
         result = schema.load(request.json)
-    except ValidationError as err:
+    except ValidationError as e:
         # Return an error with reasoning if validation fails
-        return jsonify(error="Scores POST request invalid", reason=err.messages), 400
+        return jsonify(error="Scores POST request invalid", reason=e.messages), 400
 
     if (result.get("name") in scores) and (int(result.get("score")) <= scores[result.get("name")]):
-        # Return an info message if score is lower than what is currently recorded for the name
+        # Return an info message if incoming score is lower than what is currently recorded for the name
         return jsonify(info="A higher score for this player has been recorded, system will not update"), 200
 
     # If validation passes, add the score to the dictionary
     scores[result.get("name")] = int(result.get("score"))
-    print(scores)
+
     return jsonify(success="System has been updated. Score: [{}]".format(result)), 200
 
 
