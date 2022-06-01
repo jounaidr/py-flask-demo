@@ -5,9 +5,8 @@ from marshmallow.validate import Range
 app = Flask(__name__)
 
 port = 8000
-# scores = {"pete": 4, "john": 1, "timmy": 3} Some initial data for testing
-scores = {}  # Dict is best data structure for this use case, O(n log n) sorted,
-# lookup O(1) as hashmap...
+scores = {"pete": 4, "john": 1, "timmy": 3}  # Some initial data for testing
+# Dict is best data structure for this use case, O(n log n) sorted, lookup O(1) as hashmap...
 
 
 # Schema used to validate scores POST payload so only specified fields are accepted
@@ -28,9 +27,12 @@ def post_scores():
         # Return an error with reasoning if validation fails
         return jsonify(error="Scores POST request invalid", reason=e.messages), 400
 
-    if (result.get("name") in scores) and (int(result.get("score")) <= scores[result.get("name")]):
-        # Return an info message if incoming score is lower than what is currently recorded for the name
-        return jsonify(info="A higher score for this player has been recorded, system will not update"), 200
+    try:
+        if int(result.get("score")) <= scores[result.get("name")]:
+            # Return an info message if incoming score is lower than what is currently recorded for the name
+            return jsonify(info="A higher score for this player has been recorded, system will not update"), 200
+    except KeyError:
+        pass  # Catch KeyError that will be thrown if name is not already stored, do nothing...
 
     # If validation passes, add the score to the dictionary
     scores[result.get("name")] = int(result.get("score"))
@@ -38,7 +40,7 @@ def post_scores():
     return jsonify(success="System has been updated. Score: [{}]".format(result)), 200
 
 
-@app.route('/scores/<rank>/')
+@app.route('/scores/<rank>/', methods=['GET'])
 def get_scores(rank):
     # Handle errors before sorting scores
     if (not rank.isdigit()) or (int(rank) == 0):
