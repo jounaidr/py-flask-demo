@@ -1,12 +1,15 @@
 from flask import Flask, jsonify, request
+from flask_caching import Cache
 from marshmallow import Schema, fields, ValidationError
 from marshmallow.validate import Range
 
 app = Flask(__name__)
+app.config['CACHE_TYPE'] = 'simple'  # Use simple caching that uses a hashmap
+cache = Cache()
+cache.init_app(app)
 
 port = 8000
 scores = {"pete": 4, "john": 1, "timmy": 3}  # Some initial data for testing
-# Dict is best data structure for this use case, O(n log n) sorted, lookup O(1) as hashmap...
 
 
 # Schema used to validate scores POST payload so only specified fields are accepted
@@ -41,7 +44,9 @@ def post_scores():
 
 
 @app.route('/scores/<rank>/', methods=['GET'])
+@cache.memoize(timeout=60)  # Use memoize to use argument as cache key as well
 def get_scores(rank):
+    print("Cache not used {}")
     # Handle errors before sorting scores
     if (not rank.isdigit()) or (int(rank) == 0):
         # Return an error if requested rank is invalid
