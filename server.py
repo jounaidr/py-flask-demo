@@ -8,7 +8,8 @@ app.config['CACHE_TYPE'] = 'simple'  # Use simple caching that uses a hashmap
 cache = Cache()
 cache.init_app(app)
 
-port = 8000
+port = 8888
+host = "0.0.0.0"
 scores = {"pete": 4, "john": 1, "timmy": 3}  # Some initial data for testing
 
 
@@ -46,7 +47,7 @@ def post_scores():
 @app.route('/scores/<rank>/', methods=['GET'])
 @cache.memoize(timeout=60)  # Use memoize to use argument as cache key as well
 def get_scores(rank):
-    print("Cache not used {}")
+    print("Cache not used")
     # Handle errors before sorting scores
     if (not rank.isdigit()) or (int(rank) == 0):
         # Return an error if requested rank is invalid
@@ -65,4 +66,4 @@ def get_scores(rank):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=port)
+    app.run(host=host, port=port)

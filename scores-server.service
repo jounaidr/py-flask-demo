@@ -1,0 +1,9 @@
+[Unit]
+Description=High Scores Server
+AssertPathExists=/root/py-flask-demo/server.py
+
+[Service]
+ExecStart=/usr/bin/python3 /root/py-flask-demo/server.py
+
+[Install]
+WantedBy=multi-user.target
