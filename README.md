@@ -13,7 +13,7 @@ The server can be ran using the following command: ```Python3 server.py```. Alte
 > systemctl start scores-server.service
 ```
 
-Once ran, the server can be accessed on the host ip and port set as variables in ```server.py```, by defualt it will be running on port 8888. A live demo of the server is running on the following host: [153.92.208.134:8888](http://153.92.208.134:8888/scores/1/)
+Once ran, the server can be accessed on the host ip and port set as variables in ```server.py```, by defualt it will be running on port 8888. A live demo of the server is running on the following host: [159.65.87.227:8888](http://159.65.87.227:8888/scores/1/)
 
 ### TODOs
 - Add logging functionality (timestamp, logging level, log to file)
